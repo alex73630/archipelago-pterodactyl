@@ -9,8 +9,25 @@ This repository contains a custom Pterodactyl egg for hosting Archipelago MultiW
 - ⚙️ Configurable server settings through Pterodactyl panel
 - 🔒 Optional password protection and SSL support
 - 📦 Automatic game file detection and loading
+- 🚀 Automated builds and releases via GitHub Actions
 
 ## Quick Start
+
+### Option 1: Use Pre-built Image (Recommended)
+
+The easiest way to get started is to use the pre-built Docker images from our [releases page](https://github.com/alex73630/archipelago-pterodactyl/releases).
+
+1. Download the latest `egg-archipelago-multiserver.json` from the [releases page](https://github.com/alex73630/archipelago-pterodactyl/releases)
+2. In your Pterodactyl admin panel, go to **Nests** → **Import Egg**
+3. Upload the JSON file
+4. The egg will be available for creating new servers
+
+The pre-built image is automatically updated and available at:
+```
+ghcr.io/alex73630/archipelago-pterodactyl:latest
+```
+
+### Option 2: Build Yourself
 
 ### 1. Build the Docker Image
 
@@ -98,6 +115,34 @@ The `start.sh` script:
 1. Scans the `/games` directory for `.zip` or `.archipelago` files
 2. Configures the MultiServer with environment variables from Pterodactyl
 3. Launches the Archipelago MultiServer with the detected game file
+
+## Releases and CI/CD
+
+This project uses GitHub Actions for automated builds and releases.
+
+### Automated Releases
+
+When a version tag is pushed (e.g., `v1.0.0`), the CI/CD pipeline automatically:
+1. Builds multi-architecture Docker images (amd64 and arm64)
+2. Pushes images to GitHub Container Registry
+3. Creates a GitHub Release with the egg file and documentation
+
+### Available Images
+
+Pre-built Docker images are available at:
+- `ghcr.io/alex73630/archipelago-pterodactyl:latest` - Latest stable release
+- `ghcr.io/alex73630/archipelago-pterodactyl:v1.0.0` - Specific version tags
+
+### Creating a Release
+
+To create a new release:
+
+```bash
+git tag -a v1.0.0 -m "Release version 1.0.0"
+git push origin v1.0.0
+```
+
+For more details on the CI/CD workflows, see [.github/workflows/README.md](.github/workflows/README.md).
 
 ## Support
 

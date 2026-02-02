@@ -6,7 +6,7 @@
   },
   "exported_at": "2026-02-02T00:40:00+00:00",
   "name": "Archipelago MultiServer",
-  "author": "alex73630@pterodactyl.io",
+  "author": "alex73630+pterodactyl@gmail.com",
   "description": "Archipelago MultiServer for hosting multiworld randomizer games. Drop your .zip or .archipelago game file in the games folder to start hosting.",
   "features": null,
   "docker_images": {
