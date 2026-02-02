@@ -11,9 +11,6 @@ build/
 *.log
 /tmp/
 
-# Docker
-.dockerignore
-
 # IDE
 .vscode/
 .idea/
