@@ -8,19 +8,31 @@ FROM ghcr.io/archipelagomw/archipelago:${ARCHIPELAGO_VERSION}
 # Install required dependencies for Pterodactyl
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
+    bash \
     unzip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Create the container user required by Pterodactyl
+RUN useradd -m -d /home/container -s /bin/bash container
+
+# Copy Archipelago files to container home with proper permissions
+RUN cp -r /app /home/container/app && \
+    chown -R container:container /home/container/app
+
 # Create games directory for Pterodactyl file uploads
-RUN mkdir -p /games
+RUN mkdir -p /home/container/games && \
+    chown -R container:container /home/container/games
 
-# Copy startup script
-COPY start.sh /start.sh
-RUN chmod +x /start.sh
+# Copy entrypoint and startup scripts
+COPY --chown=container:container entrypoint.sh /entrypoint.sh
+COPY --chown=container:container start.sh /home/container/start.sh
+RUN chmod +x /entrypoint.sh /home/container/start.sh
 
-# Set working directory
-WORKDIR /app
+# Switch to container user as required by Pterodactyl
+USER container
+ENV USER=container HOME=/home/container
+WORKDIR /home/container
 
 # Pterodactyl uses this as the entrypoint
-ENTRYPOINT ["/start.sh"]
+CMD ["/bin/bash", "/entrypoint.sh"]

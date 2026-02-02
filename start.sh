@@ -8,27 +8,29 @@ echo "Archipelago MultiServer for Pterodactyl"
 echo "==================================="
 
 # Initialize arguments array
-ARGS=("python" "/app/MultiServer.py")
+ARGS=("python" "/home/container/app/MultiServer.py")
 
-# Check for game files in /games directory
+# Check for game files in games directory
 GAME_FILE=""
-if [ -d "/games" ]; then
-    echo "Checking /games directory for game files..."
+if [ -d "/home/container/games" ]; then
+    echo "Checking games directory for game files..."
     
     # Look for .zip or .archipelago files
-    for file in /games/*.{zip,archipelago}; do
-        if [ -f "$file" ]; then
-            GAME_FILE="$file"
-            echo "Found game file: $GAME_FILE"
-            break
-        fi
+    for ext in zip archipelago; do
+        for file in /home/container/games/*."$ext"; do
+            if [ -f "$file" ]; then
+                GAME_FILE="$file"
+                echo "Found game file: $GAME_FILE"
+                break 2
+            fi
+        done
     done
 fi
 
 # PORT: maps to --port <value>
-if [ -n "${PORT:-}" ]; then
-    echo "Setting port: $PORT"
-    ARGS+=("--port" "$PORT")
+if [ -n "${SERVER_PORT:-}" ]; then
+    echo "Setting port: $SERVER_PORT"
+    ARGS+=("--port" "$SERVER_PORT")
 fi
 
 # HOST: maps to --host <value>
@@ -83,8 +85,8 @@ fi
 if [ -n "$GAME_FILE" ]; then
     ARGS+=("$GAME_FILE")
 else
-    echo "WARNING: No game file found in /games directory"
-    echo "Place a .zip or .archipelago file in the /games directory to host a game"
+    echo "WARNING: No game file found in games directory"
+    echo "Place a .zip or .archipelago file in the games directory to host a game"
 fi
 
 # Display the final command

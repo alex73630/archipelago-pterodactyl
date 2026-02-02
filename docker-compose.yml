@@ -12,7 +12,8 @@ services:
     ports:
       - "38281:38281"
     environment:
-      - PORT=38281
+      - STARTUP=/home/container/start.sh
+      - SERVER_PORT=38281
       - HOST=0.0.0.0
       - SERVER_PASSWORD=
       - PASSWORD=
@@ -20,5 +21,5 @@ services:
       - LOGLEVEL=info
       - USE_EMBEDDED_OPTIONS=false
     volumes:
-      - ./games:/games
+      - ./games:/home/container/games
     restart: unless-stopped
