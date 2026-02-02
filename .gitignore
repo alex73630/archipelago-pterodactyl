@@ -1,0 +1,30 @@
+# Build artifacts
+*.pyc
+__pycache__/
+*.so
+*.egg-info/
+dist/
+build/
+
+# Temporary files
+*.tmp
+*.log
+/tmp/
+
+# Docker
+.dockerignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Game files (should be in games folder on deployment)
+*.zip
+*.archipelago
