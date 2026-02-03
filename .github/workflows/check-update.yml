@@ -39,6 +39,9 @@ jobs:
             TAG_NAME="v$TAG_NAME"
           fi
           
+          # Append -1 revision for new upstream versions
+          TAG_NAME="${TAG_NAME}-1"
+          
           echo "Normalized tag: $TAG_NAME"
           
           if git rev-parse "$TAG_NAME" >/dev/null 2>&1; then

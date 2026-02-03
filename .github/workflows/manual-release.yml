@@ -1,0 +1,65 @@
+name: Manual Revision Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      type:
+        description: 'Release Type'
+        required: true
+        default: 'revision'
+        type: choice
+        options:
+          - revision
+
+jobs:
+  release-revision:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Calculate Next Version
+        id: next_version
+        run: |
+          # Get the latest tag sorted by version
+          LATEST_TAG=$(git tag -l "v*" | sort -V | tail -n 1)
+          
+          if [ -z "$LATEST_TAG" ]; then
+            echo "No tags found. Cannot increment."
+            exit 1
+          fi
+          
+          echo "Current latest tag: $LATEST_TAG"
+          
+          # Check if tag has a revision number (formatted as version-revision)
+          if [[ "$LATEST_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+-[0-9]+$ ]]; then
+            # Extract version and revision
+            BASE=${LATEST_TAG%-*}
+            REVISION=${LATEST_TAG##*-}
+            NEXT_REVISION=$((REVISION + 1))
+            NEXT_TAG="${BASE}-${NEXT_REVISION}"
+          elif [[ "$LATEST_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            # If no revision, start at -1
+            NEXT_TAG="${LATEST_TAG}-1"
+          else
+            echo "Tag format not recognized: $LATEST_TAG"
+            exit 1
+          fi
+          
+          echo "Next tag: $NEXT_TAG"
+          echo "tag=$NEXT_TAG" >> $GITHUB_OUTPUT
+
+      - name: Create and Push Tag
+        run: |
+          NEXT_TAG="${{ steps.next_version.outputs.tag }}"
+          
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          
+          git tag "$NEXT_TAG"
+          git push origin "$NEXT_TAG"
+          
+          echo "Successfully created and pushed $NEXT_TAG"
