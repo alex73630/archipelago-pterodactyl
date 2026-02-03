@@ -1,0 +1,61 @@
+name: Check for Upstream Updates
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Run daily at midnight
+  workflow_dispatch: # Allows manual triggering
+
+permissions:
+  contents: write
+
+jobs:
+  check-and-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get latest upstream release
+        id: upstream
+        run: |
+          LATEST_TAG=$(curl -s https://api.github.com/repos/ArchipelagoMW/Archipelago/releases/latest | jq -r .tag_name)
+          if [ -z "$LATEST_TAG" ] || [ "$LATEST_TAG" == "null" ]; then
+            echo "Failed to fetch latest tag."
+            exit 1
+          fi
+          echo "Latest upstream version: $LATEST_TAG"
+          echo "tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+
+      - name: Check if tag exists
+        id: check
+        run: |
+          TAG_NAME="${{ steps.upstream.outputs.tag }}"
+          
+          # Ensure v prefix if upstream doesn't have it (Archipelago tags are usually 0.x.x)
+          # We use v0.x.x convention for this repo
+          if [[ "$TAG_NAME" != v* ]]; then
+            TAG_NAME="v$TAG_NAME"
+          fi
+          
+          echo "Normalized tag: $TAG_NAME"
+          
+          if git rev-parse "$TAG_NAME" >/dev/null 2>&1; then
+            echo "Tag $TAG_NAME already exists."
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "Tag $TAG_NAME does not exist."
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create and push tag
+        if: steps.check.outputs.exists == 'false'
+        run: |
+          TAG_NAME="${{ steps.check.outputs.tag_name }}"
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git tag $TAG_NAME
+          git push origin $TAG_NAME
+          echo "Created and pushed tag $TAG_NAME"

@@ -36,3 +36,4 @@ WORKDIR /home/container
 
 # Pterodactyl uses this as the entrypoint
 CMD ["/bin/bash", "/entrypoint.sh"]
+ENTRYPOINT [ "/bin/bash", "/entrypoint.sh"]

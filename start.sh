@@ -15,16 +15,13 @@ GAME_FILE=""
 if [ -d "/home/container/games" ]; then
     echo "Checking games directory for game files..."
     
-    # Look for .zip or .archipelago files
-    for ext in zip archipelago; do
-        for file in /home/container/games/*."$ext"; do
-            if [ -f "$file" ]; then
-                GAME_FILE="$file"
-                echo "Found game file: $GAME_FILE"
-                break 2
-            fi
-        done
-    done
+    # Look for the most recent .zip or .archipelago file
+    # ls -t sorts by modification time (newest first)
+    GAME_FILE=$(ls -t /home/container/games/*.{zip,archipelago} 2>/dev/null | head -n 1)
+    
+    if [ -n "$GAME_FILE" ]; then
+        echo "Found game file: $GAME_FILE"
+    fi
 fi
 
 # PORT: maps to --port <value>

@@ -23,3 +23,6 @@ Thumbs.db
 
 # Egg file (not needed in image)
 egg-archipelago-multiserver.json
+
+# Games directory (created at runtime)
+games/
