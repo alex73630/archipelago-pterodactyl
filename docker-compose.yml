@@ -1,0 +1,23 @@
+services:
+  archipelago:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        ARCHIPELAGO_VERSION: latest
+    image: ghcr.io/alex73630/archipelago-pterodactyl:latest
+    container_name: archipelago-multiserver
+    ports:
+      - "38281:38281"
+    environment:
+      - STARTUP=/home/container/start.sh
+      - SERVER_PORT=38281
+      - HOST=0.0.0.0
+      - SERVER_PASSWORD=
+      - PASSWORD=
+      - DISABLE_SAVE=false
+      - LOGLEVEL=info
+      - USE_EMBEDDED_OPTIONS=false
+    volumes:
+      - ./games:/home/container/games
+    restart: unless-stopped

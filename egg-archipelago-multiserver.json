@@ -1,0 +1,122 @@
+{
+  "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+  "meta": {
+    "version": "PTDL_v2",
+    "update_url": null
+  },
+  "exported_at": "2026-02-02T00:40:00+00:00",
+  "name": "Archipelago MultiServer",
+  "author": "alex73630+pterodactyl@gmail.com",
+  "description": "Archipelago MultiServer for hosting multiworld randomizer games. Drop your .zip or .archipelago game file in the games folder to start hosting.",
+  "features": null,
+  "docker_images": {
+    "ghcr.io/alex73630/archipelago-pterodactyl:latest": "ghcr.io/alex73630/archipelago-pterodactyl:latest"
+  },
+  "file_denylist": [],
+  "startup": "/home/container/start.sh",
+  "config": {
+    "files": "{}",
+    "startup": "{\n    \"done\": \"Archipelago MultiWorld Server starting\"\n}",
+    "logs": "{}",
+    "stop": "^C"
+  },
+  "scripts": {
+    "installation": {
+      "script": "#!/bin/bash\n# Archipelago Installation Script\nset -e\n\necho \"======================================\"\necho \"Archipelago MultiServer Installation\"\necho \"======================================\"\n\n# Create games directory\nmkdir -p /mnt/server/games\n\necho \"Installation complete!\"\necho \"Place your .zip or .archipelago game files in the 'games' folder.\"\necho \"The server will automatically detect and load the first game file found.\"",
+      "container": "debian:bookworm-slim",
+      "entrypoint": "bash"
+    }
+  },
+  "variables": [
+    {
+      "name": "Server Port",
+      "description": "The port the Archipelago server will listen on.",
+      "env_variable": "SERVER_PORT",
+      "default_value": "38281",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|integer|between:1024,65535",
+      "field_type": "text"
+    },
+    {
+      "name": "Server Host",
+      "description": "The host address the server will bind to. Use 0.0.0.0 to listen on all interfaces.",
+      "env_variable": "HOST",
+      "default_value": "0.0.0.0",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string",
+      "field_type": "text"
+    },
+    {
+      "name": "Server Password",
+      "description": "Password required for players to connect to the server. Leave empty for no password.",
+      "env_variable": "SERVER_PASSWORD",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:255",
+      "field_type": "text"
+    },
+    {
+      "name": "Admin Password",
+      "description": "Password for server admin commands. Leave empty for no admin password.",
+      "env_variable": "PASSWORD",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:255",
+      "field_type": "text"
+    },
+    {
+      "name": "Disable Save",
+      "description": "Disable server save functionality. Set to true to disable.",
+      "env_variable": "DISABLE_SAVE",
+      "default_value": "false",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|in:true,false",
+      "field_type": "text"
+    },
+    {
+      "name": "Log Level",
+      "description": "Set the logging level (debug, info, warning, error).",
+      "env_variable": "LOGLEVEL",
+      "default_value": "info",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|in:debug,info,warning,error",
+      "field_type": "text"
+    },
+    {
+      "name": "Use Embedded Options",
+      "description": "Use options embedded in the game file. Set to true to enable.",
+      "env_variable": "USE_EMBEDDED_OPTIONS",
+      "default_value": "false",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|in:true,false",
+      "field_type": "text"
+    },
+    {
+      "name": "SSL Certificate Path",
+      "description": "Path to SSL certificate file for HTTPS. Leave empty to disable SSL.",
+      "env_variable": "CERT",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:255",
+      "field_type": "text"
+    },
+    {
+      "name": "SSL Certificate Key Path",
+      "description": "Path to SSL certificate key file for HTTPS. Leave empty to disable SSL.",
+      "env_variable": "CERT_KEY",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "nullable|string|max:255",
+      "field_type": "text"
+    }
+  ]
+}
