@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      actions: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -63,3 +64,11 @@ jobs:
           git push origin "$NEXT_TAG"
           
           echo "Successfully created and pushed $NEXT_TAG"
+
+      - name: Trigger Build Workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NEXT_TAG: ${{ steps.next_version.outputs.tag }}
+        run: |
+          echo "Triggering build for $NEXT_TAG..."
+          gh workflow run build-and-publish.yml --ref "$NEXT_TAG"
