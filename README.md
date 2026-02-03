@@ -1,5 +1,8 @@
 # Archipelago Pterodactyl Egg
 
+> [!WARNING]
+> This is an experimental setup and should not be used in production environments. Please use with caution and report any issues you encounter.
+
 This repository contains a custom Pterodactyl egg for hosting Archipelago MultiWorld randomizer games. It provides an easy way to deploy Archipelago game servers through the Pterodactyl panel.
 
 ## Features
@@ -159,4 +162,4 @@ For issues related to:
 
 ## License
 
-This project follows the same license as Archipelago. See the [Archipelago repository](https://github.com/ArchipelagoMW/Archipelago) for license details.
+This project is licensed under the MIT License.
